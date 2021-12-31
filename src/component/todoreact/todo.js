@@ -1,9 +1,17 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import './style.css'
 
+const getLocalData = () =>{
+  const lists = localStorage.getItem('mytodolist')
+  if(lists){
+    return JSON.parse(lists)
+  } else {
+    return [];
+  }
+}
 export const Todo = () => {
   const [inputData, setInputData] = useState("");
-  const [items, setItems] = useState([])
+  const [items, setItems] = useState(getLocalData())
 
   /*====Add Items function=====*/
   const addItems = (e) => {
@@ -26,6 +34,19 @@ export const Todo = () => {
   });
   setItems(updatedItem)
   }
+
+  {/*Remove all the delete items*/}
+
+  const removeAll = () =>{
+    setItems([]);
+  }
+
+  {/*Adding Local Storage*/}
+
+  useEffect(() => {
+    localStorage.setItem('mytodoList', JSON.stringify(items))
+  },[items])
+
   return (
     <>
       <div className="main-div">
@@ -63,7 +84,7 @@ export const Todo = () => {
 {/*======Remove Items=======*/}
 
           <div className="showItems">
-            <button className="btn effect04" data-sm-link-text="Remove All">
+            <button className="btn effect04" data-sm-link-text="Remove All" onClick={removeAll}>
               <span>CHECK LIST</span>
             </button>
           </div>
