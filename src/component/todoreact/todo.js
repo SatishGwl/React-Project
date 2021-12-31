@@ -1,96 +1,132 @@
-import React, { useState, useEffect } from 'react'
-import './style.css'
+import React, { useState, useEffect } from "react";
+import "./style.css";
 
-const getLocalData = () =>{
-  const lists = localStorage.getItem('mytodolist')
-  if(lists){
-    return JSON.parse(lists)
+// get the localStorage data back
+const getLocalData = () => {
+  const lists = localStorage.getItem("mytodolist");
+
+  if (lists) {
+    return JSON.parse(lists);
   } else {
     return [];
   }
-}
-export const Todo = () => {
-  const [inputData, setInputData] = useState("");
-  const [items, setItems] = useState(getLocalData())
+};
 
-  /*====Add Items function=====*/
-  const addItems = (e) => {
-    if(!inputData){
-      alert('Please Fill Your Data')
+const Todo = () => {
+  const [inputdata, setInputData] = useState("");
+  const [items, setItems] = useState(getLocalData());
+  const [isEditItem, setIsEditItem] = useState("");
+  const [toggleButton, setToggleButton] = useState(false);
+
+  // add the items fucnction
+  const addItem = () => {
+    if (!inputdata) {
+      alert("plz fill the data");
+    } else if (inputdata && toggleButton) {
+      setItems(
+        items.map((curElem) => {
+          if (curElem.id === isEditItem) {
+            return { ...curElem, name: inputdata };
+          }
+          return curElem;
+        })
+      );
+
+      setInputData("");
+      setIsEditItem(null);
+      setToggleButton(false);
     } else {
       const myNewInputData = {
         id: new Date().getTime().toString(),
-        name: inputData
-      }
-        setItems([...items, myNewInputData]);
-        setInputData("");
+        name: inputdata,
+      };
+      setItems([...items, myNewInputData]);
+      setInputData("");
     }
   };
 
-  //How to delete items
-  const deleteItem = (index) =>{
-  const updatedItem = items.filter((currentElem)=>{
-    return currentElem.id !== index;
-  });
-  setItems(updatedItem)
-  }
+  //edit the items
+  const editItem = (index) => {
+    const item_todo_edited = items.find((curElem) => {
+      return curElem.id === index;
+    });
+    setInputData(item_todo_edited.name);
+    setIsEditItem(index);
+    setToggleButton(true);
+  };
 
-  {/*Remove all the delete items*/}
+  // how to delete items section
+  const deleteItem = (index) => {
+    const updatedItems = items.filter((curElem) => {
+      return curElem.id !== index;
+    });
+    setItems(updatedItems);
+  };
 
-  const removeAll = () =>{
+  // remove all the elements
+  const removeAll = () => {
     setItems([]);
-  }
+  };
 
-  {/*Adding Local Storage*/}
-
+  // adding localStorage
   useEffect(() => {
-    localStorage.setItem('mytodoList', JSON.stringify(items))
-  },[items])
+    localStorage.setItem("mytodolist", JSON.stringify(items));
+  }, [items]);
 
   return (
     <>
       <div className="main-div">
         <div className="child-div">
           <figure>
-            <img src='./images/todo.svg' alt="todoimg" />
-            <figcaption>Add Your List Here✌️</figcaption>
+            <img src="./images/todo.svg" alt="todologo" />
+            <figcaption>Add Your List Here ✌</figcaption>
           </figure>
           <div className="addItems">
-            <input type="text"
-              placeholder="✍️ Add Your Items"
-              className="form-control" 
-              value = {inputData}
-              onChange = {(e)=> setInputData(e.target.value)}/>
-              <i className="fa fa-plus add-btn" onClick={addItems}/>
+            <input
+              type="text"
+              placeholder="✍ Add Item"
+              className="form-control"
+              value={inputdata}
+              onChange={(event) => setInputData(event.target.value)}
+            />
+            {toggleButton ? (
+              <i className="far fa-edit add-btn" onClick={addItem}></i>
+            ) : (
+              <i className="fa fa-plus add-btn" onClick={addItem}></i>
+            )}
           </div>
-          {/*Show our items*/}
+          {/* show our items  */}
           <div className="showItems">
-            {
-              items.map((currentElem) => {
-                return(
-                  <div className="eachItem" key={currentElem.id}>
-                  <h3>{currentElem.name}</h3>
+            {items.map((curElem) => {
+              return (
+                <div className="eachItem" key={curElem.id}>
+                  <h3>{curElem.name}</h3>
                   <div className="todo-btn">
-                  <i className="far fa-edit add-btn"/>
-                  <i className="far fa-trash-alt add-btn" onClick={()=>deleteItem(currentElem.id)}/>
+                    <i
+                      className="far fa-edit add-btn"
+                      onClick={() => editItem(curElem.id)}></i>
+                    <i
+                      className="far fa-trash-alt add-btn"
+                      onClick={() => deleteItem(curElem.id)}></i>
                   </div>
                 </div>
-                )
-              })
-            }
- 
+              );
+            })}
           </div>
 
-{/*======Remove Items=======*/}
-
+          {/* rmeove all button  */}
           <div className="showItems">
-            <button className="btn effect04" data-sm-link-text="Remove All" onClick={removeAll}>
-              <span>CHECK LIST</span>
+            <button
+              className="btn effect04"
+              data-sm-link-text="Remove All"
+              onClick={removeAll}>
+              <span> CHECK LIST</span>
             </button>
           </div>
         </div>
       </div>
     </>
-  )
-}
+  );
+};
+
 export default Todo;
