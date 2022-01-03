@@ -174,7 +174,7 @@ body {
 }
 
 P {
-  color: #fff;
+  /* color: #fff; */
   text-align: center;
   font-size: 60px;
   margin-bottom: 50px;
