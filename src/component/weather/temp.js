@@ -1,7 +1,47 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
+import WeatherCard from './weathercard'
 import '../weather/style.css';
 
 function Temp() {
+  const [searchValue, setSearchValue] = useState("pune");
+
+  //add myNewWeatherInfo object data into our state 
+  const [tempInfo, setTempInfo] = useState({})
+
+  const getWeatherInfo = async ()=> {
+    try {
+      let url = `https://api.openweathermap.org/data/2.5/weather?q=${searchValue}&units=metric&appid=beb64aef2e2e352ca37fab89aadec87c`;
+      const res = await fetch(url);
+      const data = await res.json();
+      //destructring for getting tmp data 
+      const {temp, humidity, pressure} = data.main;
+      const {main: weathermood } = data.weather[0];
+      const {name} = data;
+      const {speed} = data.wind;
+      const {country, sunset} = data.sys;
+      //get all data one by one in this object
+      const myNewWeatherInfo = {
+        temp, 
+        humidity,
+        pressure,
+        speed,
+        country,
+        sunset,
+        weathermood,
+        name
+      };
+
+      /*pass my obj data myNewWeatherInfo into setTempInfo state */
+      setTempInfo(myNewWeatherInfo)
+      console.log('==temp==', temp);
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  useEffect(() => {
+    getWeatherInfo()
+  }, [])
   return (
     <>
       <div className="wrap">
@@ -10,69 +50,14 @@ function Temp() {
             placeholder="...search"
             autoFocus
             id="search"
+            value={searchValue}
+            onChange={(e) => setSearchValue(e.target.value)}
             className="searchTerm" />
-          <button className="searchButton" type="button">Search</button>
+          <button className="searchButton" type="button" onClick={getWeatherInfo}>Search</button>
         </div>
       </div>
-      {/*=====our temp card start====*/}
-      <article className="widget">
-        <div className="weatherIcon">
-          <i className={"wi wi-day-sunny"}></i>
-        </div>
-        <div className="weatherInfo">
-          <div className="temperature">
-            <span>25.5$</span>
-          </div>
-          <div className="description">
-            <div className="weatherCondition">sunny</div>
-            <div className="place">Pune, place</div>
-          </div>
-        </div>
-        <div className="date">{new Date().toLocaleString()}</div>
-        {/*======Our four column section=======*/}
-        <div className="extra-temp">
-          <div className="temp-info-minmax">
-            <div className="two-sided-section">
-              <p>
-                <i className={"wi wi-sunset"}></i>
-              </p>
-              <p className={"extra-info-leftside"}>
-                19:19 PM<br />
-                  Sunset</p>
-            </div>
-
-            <div className="two-sided-section">
-              <p>
-                <i className={"wi wi-humidity"}></i>
-              </p>
-              <p className={"extra-info-leftside"}>
-                19:19 PM<br />
-                  Sunset</p>
-            </div>
-          </div>
-          <div className="weather-extra-info">
-            <div className="two-sided-section">
-              <p>
-                <i className={"wi wi-rain"}></i>
-              </p>
-              <p className={"extra-info-leftside"}>
-                19:19 PM<br />
-                  pressure</p>
-            </div>
-            <div className="two-sided-section">
-              <p>
-                <i className={"wi wi-strong-wind"}></i>
-              </p>
-              <p className={"extra-info-leftside"}>
-                19:19 PM<br />
-                  speed</p>
-            </div>
-          </div>
-        </div>
-        {/*======Our four column section=======*/}
-      </article>
-      {/*=====our temp card end====*/}
-
+{/*=====our temp card===== */}
+<WeatherCard tempInfo={tempInfo}/>
     </>
   )
 }
