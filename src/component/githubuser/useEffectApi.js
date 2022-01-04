@@ -19,14 +19,16 @@ function UseEffectApi() {
         <div className="row text-center">
           {
             users.map((currentElem) => {
+              //desctructring
+              const {id, thumbnailUrl, title, login} = currentElem
               return(
-                <div className="col-10 col-md-4 mt-5" key={currentElem.id}>
+                <div className="col-10 col-md-4 mt-5" key={id}>
                   <div className="card p-2">
                     <div className="d-flex align-items-center">
-                      <div className="image"> <img src={currentElem.thumbnailUrl} className="rounded" width="155" /> </div>
+                      <div className="image"> <img src={thumbnailUrl} className="rounded" width="155" /> </div>
                       <div className="ml-3 w-100">
-              <h4 className="mb-0 mt-0 textLeft">{currentElem.login}</h4>
-              <span className="text-left">Developer Name: {currentElem.title}</span>
+              <h4 className="mb-0 mt-0 textLeft">{login}</h4>
+              <span className="text-left">Developer Name: {title}</span>
                         <div className="p-2 mt-2 bg-primary d-flex justify-content-between rounded text-white stats">
                           <div className="d-flex flex-column">
                             <span className="articles">Articles</span> <span className="number1">38</span> </div>
