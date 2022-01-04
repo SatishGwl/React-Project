@@ -41,7 +41,7 @@ const Weathercard = ({ tempInfo }) => {
             {/*=====our temp card start====*/}
             <article className="widget">
                 <div className="weatherIcon">
-                    <i className={"wi wi-day-sunny"}></i>
+                    <i className={`wi ${weatherState}`}></i>
                 </div>
                 <div className="weatherInfo">
                     <div className="temperature">
