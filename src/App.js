@@ -6,6 +6,7 @@ import React from 'react'
 // import Todo from './component/todoreact/todo'
 // import Temp from './component/weather/temp'
 import UseEffectApi from './component/githubuser/useEffectApi'
+import MultipleInput from './component/forms/multipleInput'
 
 const App = () => {
   return (
@@ -16,7 +17,8 @@ const App = () => {
       {/* <UseReducer/> */}
       {/* <Todo/> */}
       {/* <Temp/> */}
-      <UseEffectApi/>
+      {/* <UseEffectApi/> */}
+      <MultipleInput/>
     </div>
   )
 }
